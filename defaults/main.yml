@@ -18,7 +18,7 @@ haproxy_https_frontend_bind_address: '*'
 haproxy_https_frontend_port: 443
 haproxy_https_frontend_mode: 'http'
 haproxy_ssl_certificate: '/etc/ssl/certs/example.com.pem'
-haproxy_ssl_certificate_src: '/root/atl-ssl-cert/atl.cz.intinfra.com.pem'
+haproxy_ssl_certificate_src: '/tmp/example.com.pem'
 
 # Backend settings. haproxy_backend_default = true means, haproxy_backend_servers will be used.
 haproxy_backend_default: false
