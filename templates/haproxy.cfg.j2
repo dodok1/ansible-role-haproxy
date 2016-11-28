@@ -1,3 +1,5 @@
+# {{ ansible_managed }}
+
 global
   log /dev/log  local0
   log /dev/log  local1 notice
@@ -17,9 +19,8 @@ global
 defaults
   log global
   mode  http
-  option  httplog
+
   option  dontlognull
-  option  forwardfor
 {% if haproxy_version == '1.4' %}
   contimeout 5000
   clitimeout 50000
@@ -42,6 +43,8 @@ defaults
 frontend {{ haproxy_http_frontend_name }}
   bind {{ haproxy_http_frontend_bind_address }}:{{ haproxy_http_frontend_port }}
   mode {{ haproxy_http_frontend_mode }}
+  option  httplog
+
 {% if haproxy_http_redirect == true %}
   redirect scheme https code 301 if !{ ssl_fc }
 {% endif %}
@@ -54,10 +57,12 @@ frontend {{ haproxy_http_frontend_name }}
 frontend {{ haproxy_https_frontend_name }}
   bind {{ haproxy_https_frontend_bind_address }}:{{ haproxy_https_frontend_port }} ssl crt {{ haproxy_ssl_certificate }}
   mode {{ haproxy_https_frontend_mode }}
+  option  httplog
+  option forwardfor
   reqadd X-Forwarded-Proto:\ https
 {% endif %}
 
-{% if haproxy_default_context != '' %}
+{% if haproxy_default_context|default('') != '' %}
   acl root_only_acl path -i /
   redirect code 301 location /{{ haproxy_default_context }} if root_only_acl
 {% endif %}
@@ -97,15 +102,16 @@ backend {{ haproxy_backend_name }}
   server {{ backend.name }} {{ backend.address }} cookie {{ backend.name }} check
 {% endfor %}
 {% endif %}
-{% if haproxy_optional_service_enabled == true %}
-frontend {{ haproxy_optional_service_name }}
+
+{% if haproxy_tcp_service_enabled|default(false) == true %}
+frontend {{ haproxy_tcp_service_name }}
   mode tcp
-  bind *:{{ haproxy_optional_service_port }}
-  default_backend backend_{{ haproxy_optional_service_name }}
+  bind {{ haproxy_tcp_service_bind_address }}:{{ haproxy_tcp_service_port }}
+  default_backend {{ haproxy_tcp_service_name }}_backend
   timeout client 1h
 
-backend backend_{{ haproxy_optional_service_name }}
+backend {{ haproxy_tcp_service_name }}_backend
   mode tcp
-  server {{ haproxy_optional_service_name }}-primary {{ haproxy_optional_service_backend_ip }}:{{ haproxy_optional_service_port }}
+  server {{ haproxy_tcp_service_name }}-default {{ haproxy_tcp_service_backend_ip }}:{{ haproxy_tcp_service_backend_port }}
 {% endif %}
 

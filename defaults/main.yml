@@ -30,21 +30,22 @@ haproxy_backend_httpchk: 'HEAD / HTTP/1.1\r\nHost:localhost'
 # context filters settings
 haproxy_contexts_enabled: true
 haproxy_contexts:
- - { name: 'jira', primary_ip: '192.168.128.106', backup_ip: '10.10.10.2', port: '8080' }
- - { name: 'confluence', primary_ip: '192.168.128.106', backup_ip: '10.10.10.2', port: '8080' }
- - { name: 'bitbucket', primary_ip: '192.168.128.106', backup_ip: '10.10.10.2', port: '8080' }
- - { name: 'cas', primary_ip: '192.168.128.106', backup_ip: '', port: '8080' }
+# - { name: 'jira', primary_ip: '192.168.128.106', backup_ip: '10.10.10.2', port: '8080' }
+# - { name: 'confluence', primary_ip: '192.168.128.106', backup_ip: '10.10.10.2', port: '8080' }
+# - { name: 'bitbucket', primary_ip: '192.168.128.106', backup_ip: '10.10.10.2', port: '8080' }
+# - { name: 'cas', primary_ip: '192.168.128.106', backup_ip: '', port: '8080' }
 
 #HAProxy will proxy /  to "backend:/foo"
+#haproxy_default_context: 'foo'
 
-haproxy_default_context: 'foo'
+#HAProxy tcp service definitions.
 
-#HAProxy optional service definitions.
-
-haproxy_optional_service_enabled: true
-haproxy_optional_service_name: sshd
-haproxy_optional_service_port: 7999
-haproxy_optional_service_backend_ip: 10.33.179.143
+haproxy_tcp_service_enabled: false
+haproxy_tcp_service_name: ssh
+haproxy_tcp_service_bind_address: '*'
+haproxy_tcp_service_port: 22
+haproxy_tcp_service_backend_ip: 192.168.128.106
+haproxy_tcp_service_backend_port: 7999
 
 # List of backend servers.
 #haproxy_backend_servers:

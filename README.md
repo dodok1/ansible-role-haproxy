@@ -70,10 +70,10 @@ HAProxy will proxy /  to "backend:/foo"
 
 HAProxy optional service definitions.
 
-    haproxy_optional_service_enabled: true
-    haproxy_optional_service_enabled_name: sshd
-    haproxy_optional_service_enabled_port: 7999
-    haproxy_optional_service_enabled_backend_ip: 10.33.179.143
+    haproxy_tcp_service_enabled: true
+    haproxy_tcp_service_name: sshd
+    haproxy_tcp_service_port: 7999
+    haproxy_tcp_service_backend_ip: 192.168.128.106
 
 A list of backend servers (name and address) to which HAProxy will distribute requests.
 
