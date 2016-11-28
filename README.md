@@ -65,6 +65,7 @@ HAProxy acls with apropriate backend will be created for defined contexts. If ha
         address: 192.168.0.2:80
 
 HAProxy will proxy /  to "backend:/foo"
+
     haproxy_default_context: 'foo'
 
 HAProxy optional service definitions.
