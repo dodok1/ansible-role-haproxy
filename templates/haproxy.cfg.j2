@@ -57,6 +57,11 @@ frontend {{ haproxy_https_frontend_name }}
   reqadd X-Forwarded-Proto:\ https
 {% endif %}
 
+{% if haproxy_default_context != '' %}
+  acl root_only_acl path -i /
+  redirect code 301 location /{{ haproxy_default_context }} if root_only_acl
+{% endif %}
+
 {% if haproxy_contexts_enabled == true %}
 {% for context in haproxy_contexts %}
   acl {{ context.name }}_acl path_beg /{{ context.name }}
@@ -92,3 +97,15 @@ backend {{ haproxy_backend_name }}
   server {{ backend.name }} {{ backend.address }} cookie {{ backend.name }} check
 {% endfor %}
 {% endif %}
+{% if haproxy_optional_service_enabled == true %}
+frontend {{ haproxy_optional_service_name }}
+  mode tcp
+  bind *:{{ haproxy_optional_service_port }}
+  default_backend backend_{{ haproxy_optional_service_name }}
+  timeout client 1h
+
+backend backend_{{ haproxy_optional_service_name }}
+  mode tcp
+  server {{ haproxy_optional_service_name }}-primary {{ haproxy_optional_service_backend_ip }}:{{ haproxy_optional_service_port }}
+{% endif %}
+
