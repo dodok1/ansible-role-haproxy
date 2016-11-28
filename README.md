@@ -64,6 +64,17 @@ HAProxy acls with apropriate backend will be created for defined contexts. If ha
       - name: app2
         address: 192.168.0.2:80
 
+HAProxy will proxy /  to "backend:/foo"
+
+    haproxy_default_context: 'foo'
+
+HAProxy optional service definitions.
+
+    haproxy_optional_service_enabled: true
+    haproxy_optional_service_enabled_name: sshd
+    haproxy_optional_service_enabled_port: 7999
+    haproxy_optional_service_enabled_backend_ip: 10.33.179.143
+
 A list of backend servers (name and address) to which HAProxy will distribute requests.
 
     haproxy_global_vars:
