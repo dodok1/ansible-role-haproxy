@@ -79,8 +79,8 @@ frontend {{ haproxy_https_frontend_name }}
 {% for context in haproxy_contexts %}
 backend {{ context.name }}
   server {{ context.name }}-primary {{ context.primary_ip }}:{{ context.port }} check
-{% if  context.backup_ip  != '' %}
-  server {{ context.name }}-backup {{ context.backup_ip }}:{{ context.port }} check
+{% if  context.failover_ip  != '' %}
+  server {{ context.name }}-failover {{ context.failover_ip }}:{{ context.port }} check
 {% endif %}
 
 {% endfor %}
@@ -112,6 +112,9 @@ frontend {{ haproxy_tcp_service_name }}
 
 backend {{ haproxy_tcp_service_name }}_backend
   mode tcp
-  server {{ haproxy_tcp_service_name }}-default {{ haproxy_tcp_service_backend_ip }}:{{ haproxy_tcp_service_backend_port }}
+  server {{ haproxy_tcp_service_name }}-primary {{ haproxy_tcp_service_backend_ip }}:{{ haproxy_tcp_service_backend_port }} check
+{% if  haproxy_tcp_service_failover_ip  != '' %}
+  server {{ haproxy_tcp_service_name }}-failover {{ haproxy_tcp_service_failover_ip }}:{{ haproxy_tcp_service_backend_port }} check
+{% endif %}
 {% endif %}
 

@@ -1,8 +1,8 @@
 # Ansible Role: HAProxy
 
-[![Build Status](https://travis-ci.org/geerlingguy/ansible-role-haproxy.svg?branch=master)](https://travis-ci.org/geerlingguy/ansible-role-haproxy)
-
 Installs HAProxy on RedHat/CentOS and Debian/Ubuntu Linux servers.
+
+**Note**: This role is customized to support failover to another node.
 
 **Note**: This role _officially_ supports HAProxy versions 1.4 or 1.5. Future versions may require some rework.
 
@@ -54,7 +54,7 @@ HAProxy backend configuration directives. If haproxy_backend_default is true, ba
 
     haproxy_contexts_enabled: true
     haproxy_contexts:
-     - { name: 'app1', primary_ip: '10.10.10.1', backup_ip: '10.10.10.2', port: '8080' }
+     - { name: 'app1', primary_ip: '10.10.10.1', failover_ip: '10.10.10.2', port: '8080' }
 
 HAProxy acls with apropriate backend will be created for defined contexts. If haproxy_contexts_enabled is true.
 
@@ -68,12 +68,13 @@ HAProxy will proxy /  to "backend:/foo"
 
     haproxy_default_context: 'foo'
 
-HAProxy optional service definitions.
+HAProxy optional service definitions (failover service is optional).
 
     haproxy_tcp_service_enabled: true
     haproxy_tcp_service_name: sshd
     haproxy_tcp_service_port: 7999
     haproxy_tcp_service_backend_ip: 192.168.128.106
+    haproxy_tcp_service_failover_ip: 192.168.128.102
 
 A list of backend servers (name and address) to which HAProxy will distribute requests.
 
